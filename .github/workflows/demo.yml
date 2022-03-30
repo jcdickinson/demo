@@ -1,0 +1,23 @@
+name: Demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      projects:
+        description: 'Projects'     
+        required: true
+
+jobs:
+  printInputs:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        IFS=';' read -ra PROJECTS <<< "${{ github.event.inputs.projects }}"
+        for PROJECT_INFO in "${PROJECTS[@]}"; do
+          [ -z "$PROJECT_INFO" ] && continue
+
+          IFS='=' read -ra PROJECT <<< "$PROJECT_INFO"
+          
+          echo "I'm pretending to deploy ${PROJECT[0]} with tag ${PROJECT[1]}"
+        done
+
